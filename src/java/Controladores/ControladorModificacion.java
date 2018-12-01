@@ -68,7 +68,6 @@ public class ControladorModificacion extends HttpServlet {
                 request.getParameter("password1"), "V");
         
         try {
-            
            dao.modificacionUsuario(conn, usuario, request.getParameter("password2"));
            httpSession.setAttribute("msg", "Datos actualizados correctamente.");
            response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaMensajes.jsp");

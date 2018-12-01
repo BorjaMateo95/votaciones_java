@@ -18,6 +18,7 @@ import java.util.Date;
 public class DAOOperaciones {
     
     public void insertaUsuario(Connection con, Usuario usuario, String password2) throws SQLException {
+        
         if (!usuario.getPassword().equals(password2)) {
             //lanzar exception propia
         }
@@ -40,9 +41,7 @@ public class DAOOperaciones {
     }
 
     public Usuario loginUsuario(Connection con, String dni, String password) throws SQLException, Exception {
-        
-        String sql = "SELECT * FROM usuarios WHERE dni =? AND AES_DECRYPT(password, 'borja')=?";
-        
+                
         PreparedStatement st = con.prepareStatement("SELECT * FROM usuarios WHERE dni =? AND AES_DECRYPT(password, 'borja')=?");
         st.setString(1, dni);
         st.setString(2, password);
@@ -81,6 +80,20 @@ public class DAOOperaciones {
             throw new Exception("Error al actualizar los datos");//preguntar
         }
               
+        
+    }
+
+    public void bajaUsuario(Connection conn, Usuario usuario) throws SQLException, Exception {
+        
+        //comprobar si el usuario a votado, si ha votado no dejamos que se de de baja
+                
+        PreparedStatement st = conn.prepareStatement("DELETE FROM usuarios WHERE dni=? AND AES_DECRYPT(password, 'borja')=?");
+        st.setString(1, usuario.getDni());
+        st.setString(2, usuario.getPassword());
+
+        if(st.executeUpdate() == 0){
+            throw new Exception("Error, no se ha podido dar de baja el usuario.");//preguntar
+        }
         
     }
     
