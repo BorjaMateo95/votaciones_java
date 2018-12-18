@@ -17,14 +17,14 @@ import java.util.Date;
 
 public class DAOOperaciones {
     
-    public void insertaUsuario(Connection con, Usuario usuario, String password2) throws SQLException {
+    public void insertaUsuario(Connection con, Usuario usuario, String password2) throws SQLException, Exception {
         
         if (!usuario.getPassword().equals(password2)) {
-            //lanzar exception propia
+            throw new Exception("Las contraseñas no coinciden");
         }
                       
         String sql = "INSERT INTO usuarios (dni, nombre, apellidos, domicilio, email,"
-                + " fechaNacimiento, password, rol) VALUES(?,?,?,?,?,?, AES_ENCRYPT(?,'borja'), ?)";
+                + " fechaNacimiento, password, rol, votado) VALUES(?,?,?,?,?,?, AES_ENCRYPT(?,'borja'), ?,?)";
          
         PreparedStatement st = con.prepareStatement(sql);
         st.setString(1, usuario.getDni());
@@ -35,6 +35,7 @@ public class DAOOperaciones {
         st.setDate(6, java.sql.Date.valueOf(usuario.getFechaNacimiento()));
         st.setString(7, usuario.getPassword());
         st.setString(8, usuario.getRol());
+        st.setString(9, usuario.getVotado());
 
         st.execute();
         
@@ -50,7 +51,8 @@ public class DAOOperaciones {
         if(rs.next()) {
             return new Usuario(rs.getString("dni"), rs.getString("nombre"), 
             rs.getString("apellidos"), rs.getString("domicilio"), rs.getString("email"),
-            rs.getDate("fechaNacimiento").toLocalDate(), rs.getString("password"), rs.getString("rol"));
+            rs.getDate("fechaNacimiento").toLocalDate(), rs.getString("password"),
+                    rs.getString("rol"), rs.getString("votado"));
         }else{
             //exception
             throw new Exception("Usuario o contraseña incorrectos");
@@ -86,6 +88,19 @@ public class DAOOperaciones {
     public void bajaUsuario(Connection conn, Usuario usuario) throws SQLException, Exception {
         
         //comprobar si el usuario a votado, si ha votado no dejamos que se de de baja
+        PreparedStatement st1 = conn.prepareStatement("SELECT * FROM usuarios WHERE dni=?");
+        st1.setString(1, usuario.getDni());
+        
+        ResultSet result = st1.executeQuery();
+            
+        if(result.next()) {
+            if(result.getString("votado").equals("S")){
+                throw new Exception("No puedes darte de baja porque has votado");
+            }
+        }else{
+            throw new Exception("Usuario o contraseña incorrectos");
+        }
+        
                 
         PreparedStatement st = conn.prepareStatement("DELETE FROM usuarios WHERE dni=? AND AES_DECRYPT(password, 'borja')=?");
         st.setString(1, usuario.getDni());

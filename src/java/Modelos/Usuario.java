@@ -22,9 +22,10 @@ public class Usuario {
     private LocalDate fechaNacimiento;
     private String password;
     private String rol;
+    private String votado;
 
     public Usuario(String dni, String nombre, String apellidos, String domicilio, 
-            String email, LocalDate fechaNacimiento, String password, String rol) {
+            String email, LocalDate fechaNacimiento, String password, String rol, String votado) {
         this.dni = dni;
         this.nombre = nombre;
         this.apellidos = apellidos;
@@ -33,6 +34,7 @@ public class Usuario {
         this.fechaNacimiento = fechaNacimiento;
         this.password = password;
         this.rol = rol;
+        this.votado = votado;
     }
 
     public Usuario(String dni, String password) {
@@ -112,6 +114,14 @@ public class Usuario {
 
     public void setRol(String rol) {
         this.rol = rol;
+    }
+
+    public String getVotado() {
+        return votado;
+    }
+
+    public void setVotado(String votado) {
+        this.votado = votado;
     }
     
     

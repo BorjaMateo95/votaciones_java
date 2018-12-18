@@ -65,7 +65,7 @@ public class ControladorModificacion extends HttpServlet {
         Usuario usuario = new Usuario(request.getParameter("dni"), request.getParameter("nombre"),
                 request.getParameter("apellidos"), request.getParameter("domicilio"),
                 request.getParameter("email"), LocalDate.parse(request.getParameter("fechaNac")), 
-                request.getParameter("password1"), "V");
+                request.getParameter("password1"), "V", "N");
         
         try {
            dao.modificacionUsuario(conn, usuario, request.getParameter("password2"));

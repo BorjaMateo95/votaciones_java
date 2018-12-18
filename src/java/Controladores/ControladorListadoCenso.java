@@ -5,15 +5,8 @@
  */
 package Controladores;
 
-import DAO.ConexionBD;
-import DAO.DAOOperaciones;
-import Modelos.Usuario;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -22,28 +15,10 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author BORJA
+ * @author CURILLA
  */
-@WebServlet(name = "ControladorRegistro", urlPatterns = {"/ControladorRegistro"})
-public class ControladorRegistro extends HttpServlet {
-    
-    private Connection conn;
-
-    @Override
-    public void init() throws ServletException {
-        super.init();
-        
-        try {
-            conn = ConexionBD.GetConexion().GetCon();
-            
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ControladorRegistro.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(ControladorRegistro.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        
-    }
+@WebServlet(name = "ControladorListadoCenso", urlPatterns = {"/ControladorListadoCenso"})
+public class ControladorListadoCenso extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -57,23 +32,18 @@ public class ControladorRegistro extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
-        DAOOperaciones dao = new DAOOperaciones();
-        
-        Usuario usuario = new Usuario(request.getParameter("dni"), request.getParameter("nombre"),
-                request.getParameter("apellidos"), request.getParameter("domicilio"),
-                request.getParameter("email"), LocalDate.parse(request.getParameter("fechaNac")), 
-                request.getParameter("password1"), "V", "N");
-        
-        try {
-            dao.insertaUsuario(conn, usuario, request.getParameter("password2"));
-            response.sendRedirect("/Proyecto_Votaciones_Borja/index.jsp");
-        } catch (Exception ex) {
-            Logger.getLogger(ControladorRegistro.class.getName()).log(Level.SEVERE, null, ex);
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet ControladorListadoCenso</title>");            
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet ControladorListadoCenso at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
         }
-        
-        
-        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
