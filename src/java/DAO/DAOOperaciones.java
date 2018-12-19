@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 
 
@@ -110,6 +111,27 @@ public class DAOOperaciones {
             throw new Exception("Error, no se ha podido dar de baja el usuario.");//preguntar
         }
         
+    }
+
+    public ArrayList<Usuario> dameCenso(Connection conn) throws SQLException, Exception {
+        String sql = "SELECT * FROM usuarios;";
+        PreparedStatement st = conn.prepareStatement(sql);
+        ResultSet rs = st.executeQuery(sql);
+        int contador = 0;
+        
+        ArrayList<Usuario> listaUsuarios = new ArrayList<Usuario>();
+                        
+        while (rs.next()){
+            contador++;
+            listaUsuarios.add(new Usuario(rs.getString(2), rs.getString(3), rs.getString(4),rs.getString(5), 
+                    rs.getString(6), rs.getDate(7).toLocalDate(), rs.getString(10)));
+        }
+        
+        if(contador == 0){
+            throw new Exception("No hay usuarios registrados");
+        }
+               
+        return listaUsuarios;
     }
     
 }

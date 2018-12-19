@@ -29,7 +29,7 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "ControladorLogin", urlPatterns = {"/ControladorLogin"})
 public class ControladorLogin extends HttpServlet {
     
-        private Connection conn;
+    private Connection conn;
 
     @Override
     public void init() throws ServletException {

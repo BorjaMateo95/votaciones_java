@@ -43,7 +43,7 @@
                     -->
                     <li><a href="../Controladores/ControladorInventario.php">Votar</a></li>
                     <li><a href="../Controladores/ControladorInventario.php">Ver Resultados</a></li>
-                    <li><a href="../Controladores/ControladorInventario.php">Listar Censo</a></li>
+                    <li><a href="../ControladorListadoCenso">Listar Censo</a></li>
                     <li><a href="../Controladores/ControladorInventario.php">Abrir/Cerrar Escrutinio</a></li>
                     <li><a href="../Controladores/ControladorInventario.php">Presentar resultados</a></li>
                     <li><a href="../Controladores/ControladorInventario.php">Modificar Datos</a></li>
