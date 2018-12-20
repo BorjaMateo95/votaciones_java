@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -26,10 +25,10 @@ import javax.servlet.http.HttpSession;
  *
  * @author BORJA
  */
-@WebServlet(name = "ControladorLogin", urlPatterns = {"/ControladorLogin"})
-public class ControladorLogin extends HttpServlet {
+@WebServlet(name = "ControladorAbrirEscrutinio", urlPatterns = {"/ControladorAbrirEscrutinio"})
+public class ControladorAbrirEscrutinio extends HttpServlet {
     
-    private Connection conn;
+        private Connection conn;
 
     @Override
     public void init() throws ServletException {
@@ -64,24 +63,16 @@ public class ControladorLogin extends HttpServlet {
         HttpSession httpSession = request.getSession();
         
         try {
-            Usuario usuario = dao.loginUsuario(conn,
-                    request.getParameter("dni"), request.getParameter("password"));
-            httpSession.setAttribute("usuario", usuario);
+            dao.abrirCerrarEscrutinio(conn, 1);
+            response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/MenuAdministrador.jsp");
             
-            if(usuario.getRol().equals("A")){
-                response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/MenuAdministrador.jsp");
-            }else{
-                response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/MenuVotante.jsp");
-            }
- 
         } catch (SQLException ex) {
             httpSession.setAttribute("msg", ex.getMessage());
-            response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaErrorLogin.jsp");
+            response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaError.jsp");
         } catch (Exception ex) {
             httpSession.setAttribute("msg", ex.getMessage());
-            response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaErrorLogin.jsp");
+            response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaError.jsp");
         }
-        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

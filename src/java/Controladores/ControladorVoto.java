@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -26,8 +25,8 @@ import javax.servlet.http.HttpSession;
  *
  * @author BORJA
  */
-@WebServlet(name = "ControladorLogin", urlPatterns = {"/ControladorLogin"})
-public class ControladorLogin extends HttpServlet {
+@WebServlet(name = "ControladorVoto", urlPatterns = {"/ControladorVoto"})
+public class ControladorVoto extends HttpServlet {
     
     private Connection conn;
 
@@ -59,28 +58,22 @@ public class ControladorLogin extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
+        
         DAOOperaciones dao = new DAOOperaciones();
         HttpSession httpSession = request.getSession();
         
         try {
-            Usuario usuario = dao.loginUsuario(conn,
-                    request.getParameter("dni"), request.getParameter("password"));
-            httpSession.setAttribute("usuario", usuario);
-            
-            if(usuario.getRol().equals("A")){
-                response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/MenuAdministrador.jsp");
-            }else{
-                response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/MenuVotante.jsp");
-            }
- 
+            Usuario usu = (Usuario) httpSession.getAttribute("usuario");
+            httpSession.setAttribute("partidos", dao.comprobarEscrutinioUsuario(conn, usu));
+            response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaVotar.jsp");
         } catch (SQLException ex) {
             httpSession.setAttribute("msg", ex.getMessage());
-            response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaErrorLogin.jsp");
+            response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaError.jsp");
         } catch (Exception ex) {
             httpSession.setAttribute("msg", ex.getMessage());
-            response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaErrorLogin.jsp");
+            response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaError.jsp");
         }
+
         
     }
 

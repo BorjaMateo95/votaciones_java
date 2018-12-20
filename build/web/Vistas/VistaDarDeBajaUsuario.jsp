@@ -1,7 +1,7 @@
 <%-- 
     Document   : VistaModificacionUsuario
     Created on : 27-nov-2018, 17:04:19
-    Author     : CURILLA
+    Author     : BORJA
 --%>
 
 <%@page import="Modelos.Usuario"%>

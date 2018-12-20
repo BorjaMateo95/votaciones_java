@@ -1,7 +1,7 @@
 <%-- 
     Document   : VistaRegistro
     Created on : 23-nov-2018, 0:01:29
-    Author     : CURILLA
+    Author     : BORJA
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>

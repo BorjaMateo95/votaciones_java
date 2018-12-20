@@ -5,6 +5,7 @@
  */
 package DAO;
 
+import Modelos.Partido;
 import Modelos.Usuario;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -132,6 +133,69 @@ public class DAOOperaciones {
         }
                
         return listaUsuarios;
+    }
+
+    public void abrirCerrarEscrutinio(Connection conn, int i) throws SQLException, Exception {
+        
+        String sql = "UPDATE configuracion SET situacion_escrutinio=?";
+         
+        PreparedStatement st = conn.prepareStatement(sql);
+        st.setInt(1, i);
+      
+
+        if(st.executeUpdate() == 0){
+            if(i==1) {
+               throw new Exception("Error al abrir el Escrutinio"); 
+            }else{
+               throw new Exception("Error al cerrar el Escrutinio"); 
+            }
+            
+        }
+        
+    }
+
+    public ArrayList<Partido> comprobarEscrutinioUsuario(Connection conn, Usuario usu) throws SQLException, Exception {
+        
+        PreparedStatement st = conn.prepareStatement("SELECT situacion_escrutinio FROM configuracion");
+        ResultSet rs = st.executeQuery();
+            
+        if(rs.next()) {
+            if(rs.getInt("situacion_escrutinio") == 0) {
+                throw new Exception("No puede Votar, el escrutinio esta cerrado");
+            }
+        }else{
+            throw new Exception("ERROR al leer la tabla configuracion");
+        }
+        
+        PreparedStatement stusu = conn.prepareStatement("SELECT votado FROM usuarios WHERE dni=?");
+        stusu.setString(1, usu.getDni());
+        ResultSet rsusu = stusu.executeQuery();
+            
+        if(rsusu.next()) {
+            if(rsusu.getString("votado").equals("S")) {
+                throw new Exception("Ya ha votado");
+            }
+        }else{
+            throw new Exception("ERROR al leer el usuario");
+        }
+        
+        
+        PreparedStatement stpar = conn.prepareStatement("SELECT * FROM partidos");
+        ResultSet rspar = stpar.executeQuery();
+        int contador = 0;
+        
+        ArrayList<Partido> listaPartidos = new ArrayList<Partido>();
+                    
+        while (rspar.next()){
+            contador++;
+            listaPartidos.add(new Partido(rspar.getString(2), rspar.getString(3), rspar.getInt(4)));
+        }
+        
+        if(contador == 0) {
+            throw new Exception("ERROR no hay partidos en la BD");
+        }
+
+        return listaPartidos;
     }
     
 }

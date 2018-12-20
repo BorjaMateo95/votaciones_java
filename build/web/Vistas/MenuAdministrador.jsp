@@ -44,7 +44,16 @@
                     <li><a href="../Controladores/ControladorInventario.php">Votar</a></li>
                     <li><a href="../Controladores/ControladorInventario.php">Ver Resultados</a></li>
                     <li><a href="../ControladorListadoCenso">Listar Censo</a></li>
-                    <li><a href="../Controladores/ControladorInventario.php">Abrir/Cerrar Escrutinio</a></li>
+                    
+                    <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" 
+                                            href="#">Abrir/Cerrar Escrutinio<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../ControladorAbrirEscrutinio">Abrir Escrutinio</a></li>
+                            <li><a href="../ControladorCerrarEscrutinio">Cerrar Escrutinio</a></li>
+                        </ul>
+                        
+                    </li>
+                    
                     <li><a href="../Controladores/ControladorInventario.php">Presentar resultados</a></li>
                     <li><a href="../Controladores/ControladorInventario.php">Modificar Datos</a></li>
                     <li><a href="../Controladores/ControladorInventario.php">Darse de Baja</a></li>

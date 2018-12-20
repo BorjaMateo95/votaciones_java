@@ -41,7 +41,7 @@
                         </ul>
                     </li>
                     -->
-                    <li><a href="">Votar</a></li>
+                    <li><a href="../ControladorVoto">Votar</a></li>
                     <li><a href="">Ver Resultados</a></li>
                     <li><a href="VistaModificacionUsuario.jsp">Modificar Datos</a></li>
                     <li><a href="VistaDarDeBajaUsuario.jsp">Darse de Baja</a></li>

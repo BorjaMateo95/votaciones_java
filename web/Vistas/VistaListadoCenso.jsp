@@ -28,7 +28,6 @@
 	</style>
     </head>
     <body>
-    <body>
         <%
             ArrayList<Usuario> listadoUsuarios = (ArrayList<Usuario>) session.getAttribute("usuarios");
             %>
@@ -38,14 +37,14 @@
         <h2>Censo</h2>
         </br>
         
-        <a href="menu.php">
+        <!--<a href="menu.php">
             <button type="button" class="btn btn-primary">Volver al inicio</button>
-        </a>
+        </a>-->
                 
         <div class="table-responsive" style="width:80%;">
             <table class="table table-striped table-hover">
                 <tr style="background-color:#343a40">
-                    <th style="color:#F7F9F9"><b>DNI</b></th>
+                    <th style="color:#F7F9F9"><b>Dni</b></th>
                     <th style="color:#F7F9F9"><b>Nombre</b></th>
                     <th style="color:#F7F9F9"><b>Apellidos</b></th>
                     <th style="color:#F7F9F9"><b>Domicilio</b></th>
