@@ -33,13 +33,22 @@
         <center>
             <h2>Seleccione un partido</h2>
             
+            <form class="form-signin" method="post" action="../ControladorVotar">
+            
             <%
                 for(int i = 0; i < listaPartidos.size(); i++) {
-                    out.print(listaPartidos.get(i).getNombre());
-                }
+                    %>
+                    
+                    <div class="radio">
+                        <img style="width:200px; height:70px; margin:20px;" src="Imagenes/<% out.print(listaPartidos.get(i).getLogo()); %>"/>
+                        <input type="radio" name="idvoto" id="idvoto" value="<%out.print(listaPartidos.get(i).getId());%>">
+                    </div>
                 
-                %>
-            
+                <%}%>
+                
+                <button class="btn btn-lg btn-primary btn-block btn-signin" style="width:150px; height:50px; margin:20px;" type="submit">Votar</button>
+
+                </form>
         </center>
     </body>
 </html>

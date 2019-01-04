@@ -9,10 +9,9 @@ import DAO.ConexionBD;
 import DAO.DAOOperaciones;
 import Modelos.Usuario;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -26,8 +25,8 @@ import javax.servlet.http.HttpSession;
  *
  * @author BORJA
  */
-@WebServlet(name = "ControladorListadoCenso", urlPatterns = {"/ControladorListadoCenso"})
-public class ControladorListadoCenso extends HttpServlet {
+@WebServlet(name = "ControladorVotar", urlPatterns = {"/ControladorVotar"})
+public class ControladorVotar extends HttpServlet {
     
     private Connection conn;
 
@@ -61,21 +60,32 @@ public class ControladorListadoCenso extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         
         DAOOperaciones dao = new DAOOperaciones();
+        int voto = Integer.parseInt(request.getParameter("idvoto"));
         HttpSession httpSession = request.getSession();
-        
+        Usuario usu = (Usuario) httpSession.getAttribute("usuario");
+                
         try {
-            httpSession.setAttribute("usuarios", dao.dameCenso(conn));
-            response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaListadoCenso.jsp");
-        } catch (SQLException ex) {
-            httpSession.setAttribute("msg", ex.getMessage());
-            httpSession.setAttribute("rol", "A");
-            response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaError.jsp");
+            conn.setAutoCommit(false);
+            dao.votar(conn, usu, voto);
+            conn.commit();
+            httpSession.setAttribute("msg", "Voto registrado");
+            httpSession.setAttribute("rol", usu.getRol());
+            response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaMensajes.jsp");
         } catch (Exception ex) {
+            if(conn!=null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException ex1) {
+                    Logger.getLogger(ControladorVotar.class.getName()).log(Level.SEVERE, null, ex1);
+                }
+            }
+            
             httpSession.setAttribute("msg", ex.getMessage());
-            httpSession.setAttribute("rol", "A");
+            httpSession.setAttribute("rol", usu.getRol());
             response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaError.jsp");
         }
 
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

@@ -16,7 +16,8 @@ public class Partido {
     private String logo;
     private int votos;
 
-    public Partido(String nombre, String logo, int votos) {
+    public Partido(int id, String nombre, String logo, int votos) {
+        this.id = id;
         this.nombre = nombre;
         this.logo = logo;
         this.votos = votos;

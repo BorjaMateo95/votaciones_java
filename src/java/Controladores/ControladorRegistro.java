@@ -19,6 +19,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -59,6 +60,7 @@ public class ControladorRegistro extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
 
         DAOOperaciones dao = new DAOOperaciones();
+        HttpSession httpSession = request.getSession();
         
         Usuario usuario = new Usuario(request.getParameter("dni"), request.getParameter("nombre"),
                 request.getParameter("apellidos"), request.getParameter("domicilio"),
@@ -69,7 +71,8 @@ public class ControladorRegistro extends HttpServlet {
             dao.insertaUsuario(conn, usuario, request.getParameter("password2"));
             response.sendRedirect("/Proyecto_Votaciones_Borja/index.jsp");
         } catch (Exception ex) {
-            Logger.getLogger(ControladorRegistro.class.getName()).log(Level.SEVERE, null, ex);
+            httpSession.setAttribute("msg", ex.getMessage());
+            response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaErrorLogin.jsp");
         }
         
         

@@ -4,11 +4,11 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/xampp/htdocs/DAW/DWES/Proyecto_Votaciones_Borja/web/Vistas/MenuAdministrador.jsp</file>
-            <file>file:/C:/xampp/htdocs/DAW/DWES/Proyecto_Votaciones_Borja/src/java/Controladores/ControladorListadoCenso.java</file>
-            <file>file:/C:/xampp/htdocs/DAW/DWES/Proyecto_Votaciones_Borja/web/Vistas/VistaListadoCenso.jsp</file>
+            <file>file:/C:/xampp/htdocs/DAW/DWES/Proyecto_Votaciones_Borja/web/Vistas/MenuVotante.jsp</file>
             <file>file:/C:/xampp/htdocs/DAW/DWES/Proyecto_Votaciones_Borja/src/java/DAO/DAOOperaciones.java</file>
-            <file>file:/C:/xampp/htdocs/DAW/DWES/Proyecto_Votaciones_Borja/src/java/Controladores/ControladorLogin.java</file>
-            <file>file:/C:/xampp/htdocs/DAW/DWES/Proyecto_Votaciones_Borja/web/Vistas/VistaModificacionUsuario.jsp</file>
+            <file>file:/C:/xampp/htdocs/DAW/DWES/Proyecto_Votaciones_Borja/web/Vistas/VistaVotar.jsp</file>
+            <file>file:/C:/xampp/htdocs/DAW/DWES/Proyecto_Votaciones_Borja/src/java/Controladores/ControladorVotar.java</file>
+            <file>file:/C:/xampp/htdocs/DAW/DWES/Proyecto_Votaciones_Borja/src/java/Controladores/ControladorVoto.java</file>
         </group>
     </open-files>
 </project-private>

@@ -49,24 +49,21 @@
             </div>
         </nav>
         
-        <!--
         <div class="container" style="width: 50%; margin-top: 7rem;">
             <div class="panel-group">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
-                        <h4><?php echo $almacen->getCodigo() . " " . $almacen->getNombre(); ?></h4>
+                        <h4><% out.print("Borja Mateo"); %></h4>
                     </div>
                     <div class="panel-body">
-                        <p><b>Codigo: </b><?php echo $almacen->getCodigo(); ?></p>
-                        <p><b>Nombre: </b><?php echo $almacen->getNombre(); ?></p>
-                        <p><b>Direccion: </b><?php echo $almacen->getDireccion(); ?></p>
-                        <p><b>Pasillos: </b><?php echo $almacen->getDisePasillos(); ?></p>
-                        <p><b>Numeros: </b><?php echo $almacen->getNumeros(); ?></p>
+                        <p><b>DNI: </b><% out.print("48258022-C"); %></p>
+                        <p><b>Domicilio: </b><% out.print("c/ la piruleta"); %></p>
+                        <p><b>Email: </b><% out.print("b@b.com"); %></p>
+                        <p><b>Fecha Nacimiento: </b><% out.print("01-01-1995"); %></p>
                     </div>
                 </div>
             </div>
         </div>
-        -->
 
     </body>
 </html>

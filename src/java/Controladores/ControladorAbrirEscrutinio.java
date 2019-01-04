@@ -61,16 +61,18 @@ public class ControladorAbrirEscrutinio extends HttpServlet {
 
         DAOOperaciones dao = new DAOOperaciones();
         HttpSession httpSession = request.getSession();
+        Usuario usu = (Usuario) httpSession.getAttribute("usuario");
         
         try {
             dao.abrirCerrarEscrutinio(conn, 1);
             response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/MenuAdministrador.jsp");
-            
         } catch (SQLException ex) {
             httpSession.setAttribute("msg", ex.getMessage());
+            httpSession.setAttribute("rol", usu.getRol());
             response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaError.jsp");
         } catch (Exception ex) {
             httpSession.setAttribute("msg", ex.getMessage());
+            httpSession.setAttribute("rol", usu.getRol());
             response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaError.jsp");
         }
     }

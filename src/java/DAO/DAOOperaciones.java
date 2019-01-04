@@ -5,15 +5,15 @@
  */
 package DAO;
 
+import Excepciones.MiException;
 import Modelos.Partido;
 import Modelos.Usuario;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
+import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Date;
 
 
 
@@ -22,7 +22,7 @@ public class DAOOperaciones {
     public void insertaUsuario(Connection con, Usuario usuario, String password2) throws SQLException, Exception {
         
         if (!usuario.getPassword().equals(password2)) {
-            throw new Exception("Las contraseñas no coinciden");
+            throw new MiException("Las contraseñas no coinciden");
         }
                       
         String sql = "INSERT INTO usuarios (dni, nombre, apellidos, domicilio, email,"
@@ -56,15 +56,14 @@ public class DAOOperaciones {
             rs.getDate("fechaNacimiento").toLocalDate(), rs.getString("password"),
                     rs.getString("rol"), rs.getString("votado"));
         }else{
-            //exception
-            throw new Exception("Usuario o contraseña incorrectos");
+            throw new MiException("Usuario o contraseña incorrectos");
         }
               
     }
 
     public void modificacionUsuario(Connection conn, Usuario usuario, String password2) throws SQLException, Exception{
         if (!usuario.getPassword().equals(password2)) {
-            //lanzar exception propia
+            throw new MiException("Las contraseñas no coinciden");
         }
         
         String sql = "UPDATE usuarios SET dni=? , nombre=?, apellidos =?, domicilio=?, email=?,"
@@ -81,7 +80,7 @@ public class DAOOperaciones {
         st.setString(8, usuario.getDni());
 
         if(st.executeUpdate() == 0){
-            throw new Exception("Error al actualizar los datos");//preguntar
+            throw new MiException("Error al actualizar los datos");//preguntar
         }
               
         
@@ -97,10 +96,10 @@ public class DAOOperaciones {
             
         if(result.next()) {
             if(result.getString("votado").equals("S")){
-                throw new Exception("No puedes darte de baja porque has votado");
+                throw new MiException("No puedes darte de baja porque has votado");
             }
         }else{
-            throw new Exception("Usuario o contraseña incorrectos");
+            throw new MiException("Usuario o contraseña incorrectos");
         }
         
                 
@@ -109,7 +108,7 @@ public class DAOOperaciones {
         st.setString(2, usuario.getPassword());
 
         if(st.executeUpdate() == 0){
-            throw new Exception("Error, no se ha podido dar de baja el usuario.");//preguntar
+            throw new MiException("Error, no se ha podido dar de baja el usuario.");
         }
         
     }
@@ -129,7 +128,7 @@ public class DAOOperaciones {
         }
         
         if(contador == 0){
-            throw new Exception("No hay usuarios registrados");
+            throw new MiException("No hay usuarios registrados");
         }
                
         return listaUsuarios;
@@ -145,9 +144,9 @@ public class DAOOperaciones {
 
         if(st.executeUpdate() == 0){
             if(i==1) {
-               throw new Exception("Error al abrir el Escrutinio"); 
+               throw new MiException("Error al abrir el Escrutinio"); 
             }else{
-               throw new Exception("Error al cerrar el Escrutinio"); 
+               throw new MiException("Error al cerrar el Escrutinio"); 
             }
             
         }
@@ -161,10 +160,10 @@ public class DAOOperaciones {
             
         if(rs.next()) {
             if(rs.getInt("situacion_escrutinio") == 0) {
-                throw new Exception("No puede Votar, el escrutinio esta cerrado");
+                throw new MiException("No puede Votar, el escrutinio esta cerrado");
             }
         }else{
-            throw new Exception("ERROR al leer la tabla configuracion");
+            throw new MiException("ERROR al leer la tabla configuracion");
         }
         
         PreparedStatement stusu = conn.prepareStatement("SELECT votado FROM usuarios WHERE dni=?");
@@ -173,12 +172,93 @@ public class DAOOperaciones {
             
         if(rsusu.next()) {
             if(rsusu.getString("votado").equals("S")) {
-                throw new Exception("Ya ha votado");
+                throw new MiException("Ya ha votado");
             }
         }else{
-            throw new Exception("ERROR al leer el usuario");
+            throw new MiException("ERROR al leer el usuario");
+        }
+                
+        PreparedStatement stpar = conn.prepareStatement("SELECT * FROM partidos");
+        ResultSet rspar = stpar.executeQuery();
+        int contador = 0;
+        
+        ArrayList<Partido> listaPartidos = new ArrayList<Partido>();
+                    
+        while (rspar.next()){
+            contador++;
+            listaPartidos.add(new Partido(rspar.getInt(1), rspar.getString(2), rspar.getString(3), rspar.getInt(4)));
         }
         
+        if(contador == 0) {
+            throw new MiException("ERROR no hay partidos en la BD");
+        }
+
+        return listaPartidos;
+    }
+
+    public void votar(Connection conn, Usuario usu, int voto) throws SQLException, MiException {
+        
+        PreparedStatement stc = conn.prepareStatement("SELECT * FROM usuarios WHERE dni=?");
+        stc.setString(1, usu.getDni());
+        ResultSet rsu = stc.executeQuery();
+        
+        if (rsu.next()) {
+            if(rsu.getString("votado").equals("S")) {
+                throw new MiException("ERROR usted ya ha votado");
+            }
+        }else{
+            throw new MiException("ERROR al leer el usuario");
+        }
+        
+        
+        PreparedStatement st = conn.prepareStatement("SELECT * FROM partidos WHERE ID=?");
+        st.setInt(1, voto);
+        ResultSet rs = st.executeQuery();
+        
+        int numVotos = 0;
+        
+        if (rs.next()) {
+            numVotos = rs.getInt("VOTOS");
+        }else{
+            throw new MiException("ERROR al leer el partido");
+        }
+        
+        numVotos++;
+        
+        PreparedStatement std = conn.prepareStatement("UPDATE partidos SET VOTOS=? WHERE ID=?");
+        std.setInt(1, numVotos);
+        std.setInt(2, voto);
+      
+
+        if(std.executeUpdate() == 0){
+            throw new MiException("ERROR al votar");
+        }
+        
+        
+        PreparedStatement stu = conn.prepareStatement("UPDATE usuarios SET votado=? WHERE dni=?");
+        stu.setString(1, "S");
+        stu.setString(2, usu.getDni());
+      
+
+        if(stu.executeUpdate() == 0){
+            throw new MiException("ERROR al actualizar el usuario");
+        }
+               
+        
+    }
+
+    public ArrayList<Partido> comprobarEscrutinio(Connection conn) throws SQLException, MiException {
+        PreparedStatement stc = conn.prepareStatement("SELECT * FROM configuracion WHERE id=?");
+        stc.setInt(1, 1);
+        ResultSet rsu = stc.executeQuery();
+        
+        if (rsu.next()) {
+            if(rsu.getInt("situacion_escrutinio") == 1) {
+                throw new MiException("ERROR no puede ver los resultados el escrutinio esta abierto");
+            }
+        }else{
+            throw new MiException("ERROR al leer la configuracion de la votación");
+        }
         
         PreparedStatement stpar = conn.prepareStatement("SELECT * FROM partidos");
         ResultSet rspar = stpar.executeQuery();
@@ -188,14 +268,15 @@ public class DAOOperaciones {
                     
         while (rspar.next()){
             contador++;
-            listaPartidos.add(new Partido(rspar.getString(2), rspar.getString(3), rspar.getInt(4)));
+            listaPartidos.add(new Partido(rspar.getInt(1), rspar.getString(2), rspar.getString(3), rspar.getInt(4)));
         }
         
         if(contador == 0) {
-            throw new Exception("ERROR no hay partidos en la BD");
+            throw new MiException("ERROR no hay partidos en la BD");
         }
 
-        return listaPartidos;
+        return listaPartidos;       
+        
     }
     
 }

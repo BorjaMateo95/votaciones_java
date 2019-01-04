@@ -7,6 +7,7 @@ package Controladores;
 
 import DAO.ConexionBD;
 import DAO.DAOOperaciones;
+import Modelos.Usuario;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -60,16 +61,18 @@ public class ControladorCerrarEscrutinio extends HttpServlet {
             
         DAOOperaciones dao = new DAOOperaciones();
         HttpSession httpSession = request.getSession();
+        Usuario usu = (Usuario) httpSession.getAttribute("usuario");
         
         try {
             dao.abrirCerrarEscrutinio(conn, 0);
             response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/MenuAdministrador.jsp");
-            
         } catch (SQLException ex) {
             httpSession.setAttribute("msg", ex.getMessage());
+            httpSession.setAttribute("rol", usu.getRol());
             response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaError.jsp");
         } catch (Exception ex) {
             httpSession.setAttribute("msg", ex.getMessage());
+            httpSession.setAttribute("rol", usu.getRol());
             response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaError.jsp");
         
         }

@@ -52,6 +52,7 @@ public class ControladorBaja extends HttpServlet {
 
         DAOOperaciones dao = new DAOOperaciones();
         HttpSession httpSession = request.getSession();
+        Usuario usu = (Usuario) httpSession.getAttribute("usuario");
         
         try {
            dao.bajaUsuario(conn, new Usuario(request.getParameter("dni"), request.getParameter("password1")));
@@ -59,9 +60,11 @@ public class ControladorBaja extends HttpServlet {
            response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaMensajeBaja.jsp");
         } catch (SQLException ex) {
             httpSession.setAttribute("msg", ex.getMessage());
+            httpSession.setAttribute("rol", usu.getRol());
             response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaError.jsp");
         } catch (Exception ex) {
             httpSession.setAttribute("msg", ex.getMessage());
+            httpSession.setAttribute("rol", usu.getRol());
             response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaError.jsp");
         }
         

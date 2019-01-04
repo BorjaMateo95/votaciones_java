@@ -22,9 +22,16 @@ and open the template in the editor.
                 <div class="card-header">ATENCIÓN</div>
                 <div class="card-body">
                     <p class="card-text"><% out.print(session.getAttribute("msg").toString()); %></p>
-                    <a href="MenuVotante.jsp">
-                        <button type="button" class="btn btn-default">Volver al inicio</button>
-                    </a>
+                    <% if (session.getAttribute("rol").toString().equals("V")){%>
+                        <a href="MenuVotante.jsp">
+                            <button type="button" class="btn btn-default">Volver al inicio</button>
+                        </a>
+                    <%}else{%>
+                        <a href="MenuAdministrador.jsp">
+                            <button type="button" class="btn btn-default">Volver al inicio</button>
+                        </a>
+                    <%}%>
+
                 </div>
             </div>
         </center>

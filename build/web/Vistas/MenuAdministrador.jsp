@@ -41,8 +41,8 @@
                         </ul>
                     </li>
                     -->
-                    <li><a href="../Controladores/ControladorInventario.php">Votar</a></li>
-                    <li><a href="../Controladores/ControladorInventario.php">Ver Resultados</a></li>
+                    <li><a href="../ControladorVoto">Votar</a></li>
+                    <li><a href="../ControladorResultados">Ver Resultados</a></li>
                     <li><a href="../ControladorListadoCenso">Listar Censo</a></li>
                     
                     <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" 
@@ -54,7 +54,7 @@
                         
                     </li>
                     
-                    <li><a href="../Controladores/ControladorInventario.php">Presentar resultados</a></li>
+                    <li><a href="../ControladorResultados">Presentar resultados</a></li>
                     <li><a href="../Controladores/ControladorInventario.php">Modificar Datos</a></li>
                     <li><a href="../Controladores/ControladorInventario.php">Darse de Baja</a></li>
                 </ul>

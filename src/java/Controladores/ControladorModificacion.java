@@ -70,12 +70,15 @@ public class ControladorModificacion extends HttpServlet {
         try {
            dao.modificacionUsuario(conn, usuario, request.getParameter("password2"));
            httpSession.setAttribute("msg", "Datos actualizados correctamente.");
+           httpSession.setAttribute("rol", usuario.getRol());
            response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaMensajes.jsp");
         } catch (SQLException ex) {
             httpSession.setAttribute("msg", ex.getMessage());
+            httpSession.setAttribute("rol", usuario.getRol());
             response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaError.jsp");
         } catch (Exception ex) {
             httpSession.setAttribute("msg", ex.getMessage());
+            httpSession.setAttribute("rol", usuario.getRol());
             response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaError.jsp");
         }
    

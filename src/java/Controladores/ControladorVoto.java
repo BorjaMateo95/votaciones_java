@@ -42,8 +42,7 @@ public class ControladorVoto extends HttpServlet {
         } catch (SQLException ex) {
             Logger.getLogger(ControladorRegistro.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
+         
     }
 
     /**
@@ -61,16 +60,18 @@ public class ControladorVoto extends HttpServlet {
         
         DAOOperaciones dao = new DAOOperaciones();
         HttpSession httpSession = request.getSession();
+        Usuario usu = (Usuario) httpSession.getAttribute("usuario");
         
         try {
-            Usuario usu = (Usuario) httpSession.getAttribute("usuario");
             httpSession.setAttribute("partidos", dao.comprobarEscrutinioUsuario(conn, usu));
             response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaVotar.jsp");
         } catch (SQLException ex) {
             httpSession.setAttribute("msg", ex.getMessage());
+            httpSession.setAttribute("rol", usu.getRol());
             response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaError.jsp");
         } catch (Exception ex) {
             httpSession.setAttribute("msg", ex.getMessage());
+            httpSession.setAttribute("rol", usu.getRol());
             response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaError.jsp");
         }
 
