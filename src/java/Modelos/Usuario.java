@@ -46,8 +46,18 @@ public class Usuario {
         this.domicilio = domicilio;
         this.email = email;
         this.fechaNacimiento = fechaNacimiento;
-        this.votado = votado;
-        
+        this.votado = votado; 
+    }
+    
+        public Usuario(String dni, String nombre, String apellidos, String domicilio, String email, String password,
+            LocalDate fechaNacimiento) {
+            this.dni = dni;
+            this.nombre = nombre;
+            this.apellidos = apellidos;
+            this.domicilio = domicilio;
+            this.email = email;
+            this.password = password;
+            this.fechaNacimiento = fechaNacimiento;
     }
 
     public Usuario(String dni, String password) {

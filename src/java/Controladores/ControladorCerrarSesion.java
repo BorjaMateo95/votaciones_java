@@ -5,15 +5,8 @@
  */
 package Controladores;
 
-import DAO.ConexionBD;
-import DAO.DAOOperaciones;
-import Modelos.Usuario;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -25,26 +18,8 @@ import javax.servlet.http.HttpSession;
  *
  * @author BORJA
  */
-@WebServlet(name = "ControladorResultados", urlPatterns = {"/ControladorResultados"})
-public class ControladorResultados extends HttpServlet {
-    
-    private Connection conn;
-
-    @Override
-    public void init() throws ServletException {
-        super.init();
-        
-        try {
-            conn = ConexionBD.GetConexion().GetCon();
-            
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ControladorRegistro.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(ControladorRegistro.class.getName()).log(Level.SEVERE, null, ex);
-        }
-         
-    }
-    
+@WebServlet(name = "ControladorCerrarSesion", urlPatterns = {"/ControladorCerrarSesion"})
+public class ControladorCerrarSesion extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -59,26 +34,12 @@ public class ControladorResultados extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         
-        DAOOperaciones dao = new DAOOperaciones();
         HttpSession httpSession = request.getSession();
-        Usuario usu = (Usuario) httpSession.getAttribute("usuario");
+        httpSession.invalidate();
+        response.sendRedirect("/Proyecto_Votaciones_Borja/index.jsp");
         
-        try {
-            httpSession.setAttribute("partidos", dao.comprobarEscrutinio(conn));
-            httpSession.setAttribute("rol", usu.getRol());
-            response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaResultados.jsp");
-        } catch (SQLException ex) {
-            httpSession.setAttribute("msg", ex.getMessage());
-            httpSession.setAttribute("rol", usu.getRol());
-            response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaError.jsp");
-        } catch (Exception ex) {
-            httpSession.setAttribute("msg", ex.getMessage());
-            httpSession.setAttribute("rol", usu.getRol());
-            response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaError.jsp");
-        }
-
-
         
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

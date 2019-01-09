@@ -37,10 +37,12 @@
         <h2>Censo</h2>
         </br>
         
-        <!--<a href="menu.php">
+        <a href="MenuAdministrador.jsp">
             <button type="button" class="btn btn-primary">Volver al inicio</button>
-        </a>-->
-                
+        </a>
+        
+        </br>
+        
         <div class="table-responsive" style="width:80%;">
             <table class="table table-striped table-hover">
                 <tr style="background-color:#343a40">

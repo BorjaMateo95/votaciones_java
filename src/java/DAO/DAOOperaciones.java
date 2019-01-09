@@ -6,6 +6,8 @@
 package DAO;
 
 import Excepciones.MiException;
+import Modelos.Candidato;
+import Modelos.Escano;
 import Modelos.Partido;
 import Modelos.Usuario;
 import java.sql.Connection;
@@ -14,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 
@@ -66,21 +69,33 @@ public class DAOOperaciones {
             throw new MiException("Las contraseñas no coinciden");
         }
         
-        String sql = "UPDATE usuarios SET dni=? , nombre=?, apellidos =?, domicilio=?, email=?,"
+        PreparedStatement stV = conn.prepareStatement("SELECT * FROM usuarios WHERE dni=?");
+        stV.setString(1, usuario.getDni());
+        
+        ResultSet result = stV.executeQuery();
+            
+        if(result.next()) {
+            if(result.getString("votado").equals("S")){
+                throw new MiException("No puedes modificar los datos porque has votado");
+            }
+        }else{
+            throw new MiException("Usuario o contraseña incorrectos");
+        }
+        
+        String sql = "UPDATE usuarios SET nombre=?, apellidos =?, domicilio=?, email=?,"
         + " fechaNacimiento=?, password=AES_ENCRYPT(?,'borja') WHERE dni=?";
          
         PreparedStatement st = conn.prepareStatement(sql);
-        st.setString(1, usuario.getDni());
-        st.setString(2, usuario.getNombre());
-        st.setString(3, usuario.getApellidos());
-        st.setString(4, usuario.getDomicilio());
-        st.setString(5, usuario.getEmail());
-        st.setDate(6, java.sql.Date.valueOf(usuario.getFechaNacimiento()));
-        st.setString(7, usuario.getPassword());
-        st.setString(8, usuario.getDni());
+        st.setString(1, usuario.getNombre());
+        st.setString(2, usuario.getApellidos());
+        st.setString(3, usuario.getDomicilio());
+        st.setString(4, usuario.getEmail());
+        st.setDate(5, java.sql.Date.valueOf(usuario.getFechaNacimiento()));
+        st.setString(6, usuario.getPassword());
+        st.setString(7, usuario.getDni());
 
         if(st.executeUpdate() == 0){
-            throw new MiException("Error al actualizar los datos");//preguntar
+            throw new MiException("Error al actualizar los datos");
         }
               
         
@@ -88,7 +103,6 @@ public class DAOOperaciones {
 
     public void bajaUsuario(Connection conn, Usuario usuario) throws SQLException, Exception {
         
-        //comprobar si el usuario a votado, si ha votado no dejamos que se de de baja
         PreparedStatement st1 = conn.prepareStatement("SELECT * FROM usuarios WHERE dni=?");
         st1.setString(1, usuario.getDni());
         
@@ -276,6 +290,136 @@ public class DAOOperaciones {
         }
 
         return listaPartidos;       
+        
+    }
+    
+    public ArrayList<Escano> presentarResultados(Connection conn) throws SQLException, MiException {
+        
+        ArrayList<Partido> listPartidos = comprobarEscrutinio(conn);
+        
+        int votosTotales = 0;
+        int numeroEscanos = dimeNumeroEscanos(conn);
+        
+        for (int i = 0; i < listPartidos.size(); i++) {
+            votosTotales += listPartidos.get(i).getVotos();
+        }
+        
+        //eliminamos los partidos que no llegen al 3%
+        for (int i = 0; i < listPartidos.size(); i++) {
+            int n = listPartidos.get(i).getVotos() * 100;
+            
+            double result = n / votosTotales;
+            
+            if (result < 3) {
+                listPartidos.remove(i);
+            }
+            
+        }
+
+        double array[][] = new double[listPartidos.size()][numeroEscanos];
+        
+        for (int i = 0; i < listPartidos.size(); i++) {
+            double votos = listPartidos.get(i).getVotos();
+            
+            for (int e = 1; e <= numeroEscanos; e++) {
+                double resul = votos / e;
+                array[i][e-1] = resul;
+            }
+            
+        }
+        
+        int numeroA = listPartidos.size() * numeroEscanos;
+        double arrayTodos[] = new double[numeroA];
+        
+        int cont = 0;
+        for(int i = 0; i < listPartidos.size(); i++) {
+
+            for (int e = 0; e < numeroEscanos; e++) {
+                arrayTodos[cont] = array[i][e];
+                cont++;
+            }
+
+        }
+        
+        Arrays.sort(arrayTodos);
+        double arrayFinal[] = new double[numeroEscanos];
+        
+        int a = 1;
+        for(int i = 0; i < numeroEscanos; i++) {
+            arrayFinal[i] = arrayTodos[numeroA-a];
+            a++;
+        }        
+
+
+        //escaños
+        for (int i = 0; i < listPartidos.size(); i++) {
+            int esc = (int) (listPartidos.get(i).getVotos() / arrayFinal[numeroEscanos-1]);
+            listPartidos.get(i).setEscanos(esc);
+            
+        }
+        
+        ArrayList<Escano> listEscano = new ArrayList<Escano>();
+        for(int i= 0; i < listPartidos.size(); i++) {
+                if(listPartidos.get(i).getEscanos() != 0) {
+                    ArrayList<Candidato> listCandidatos = dameCandidatos(conn, listPartidos.get(i).getId(), listPartidos.get(i).getEscanos());
+                    listEscano.add(new Escano(listPartidos.get(i), listCandidatos));
+            
+                    for(int e = 0; e < listCandidatos.size(); e++) {
+                        guardaEscano(conn, listPartidos.get(i).getId(), listCandidatos.get(e).getId());
+                    }
+                }else{
+                    listPartidos.remove(i);
+                }
+
+        }
+        
+        return listEscano;
+ 
+    }
+    
+    
+    private void guardaEscano(Connection conn, int idPartido, int idCandidato) throws SQLException {
+        String sql = "INSERT INTO escanos (idPartido, idCandidato) VALUES(?,?)";
+        PreparedStatement st = conn.prepareStatement(sql);
+        st.setInt(1, idPartido);
+        st.setInt(2, idCandidato);
+        st.execute();
+    }
+    
+    
+    private ArrayList<Candidato> dameCandidatos(Connection conn, int id, int tope) throws SQLException, MiException {
+        PreparedStatement stpar = conn.prepareStatement("SELECT * FROM candidatos WHERE ID_PARTIDO=? ORDER BY ORDEN LIMIT ?");
+        stpar.setInt(1, id);
+        stpar.setInt(2, tope);
+        ResultSet rspar = stpar.executeQuery();
+        int contador = 0;
+                
+        ArrayList<Candidato> listaCandidatos = new ArrayList<Candidato>();
+                    
+        while (rspar.next()){
+            contador++;
+            listaCandidatos.add(new Candidato(rspar.getInt(1), rspar.getString(2), rspar.getInt(3), rspar.getInt(4)));
+        }
+        
+        if(contador == 0) {
+            throw new MiException("ERROR no hay partidos en la BD");
+        }
+
+        return listaCandidatos;
+    }
+    
+    
+    public int dimeNumeroEscanos(Connection conn) throws SQLException, MiException {
+        
+        PreparedStatement stc = conn.prepareStatement("SELECT * FROM configuracion WHERE id=?");
+        stc.setInt(1, 1);
+        ResultSet rsu = stc.executeQuery();
+        
+        if (rsu.next()) {
+              return rsu.getInt("n_escanos");
+        }else{
+            throw new MiException("ERROR al leer la configuracion de la votación");
+        }
         
     }
     

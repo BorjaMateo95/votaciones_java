@@ -9,19 +9,18 @@ package Modelos;
  *
  * @author BORJA
  */
-public class Partido {
+public class Candidato {
     
     private int id;
     private String nombre;
-    private String logo;
-    private int votos;
-    private int escanos;
+    private int orden;
+    private int idPartido;
 
-    public Partido(int id, String nombre, String logo, int votos) {
+    public Candidato(int id, String nombre, int orden, int idPartido) {
         this.id = id;
         this.nombre = nombre;
-        this.logo = logo;
-        this.votos = votos;
+        this.orden = orden;
+        this.idPartido = idPartido;
     }
 
     public int getId() {
@@ -40,28 +39,20 @@ public class Partido {
         this.nombre = nombre;
     }
 
-    public String getLogo() {
-        return logo;
+    public int getOrden() {
+        return orden;
     }
 
-    public void setLogo(String logo) {
-        this.logo = logo;
+    public void setOrden(int orden) {
+        this.orden = orden;
     }
 
-    public int getVotos() {
-        return votos;
+    public int getIdPartido() {
+        return idPartido;
     }
 
-    public void setVotos(int votos) {
-        this.votos = votos;
-    }
-
-    public int getEscanos() {
-        return escanos;
-    }
-
-    public void setEscanos(int escanos) {
-        this.escanos = escanos;
+    public void setIdPartido(int idPartido) {
+        this.idPartido = idPartido;
     }
     
     

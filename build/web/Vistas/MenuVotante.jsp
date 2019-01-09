@@ -4,6 +4,7 @@
     Author     : BORJA
 --%>
 
+<%@page import="Modelos.Usuario"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -16,6 +17,9 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     </head>
     <body>
+        <%
+            Usuario usuario = (Usuario) session.getAttribute("usuario");
+        %>
        
         <nav class="navbar navbar-inverse">
             <div class="container-fluid">
@@ -23,28 +27,12 @@
                     <a class="navbar-brand" href="MenuVotante.jsp">E-Votaciones</a>
                 </div>
                 <ul class="nav navbar-nav">
-                    <!--
-                    <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" 
-                                            href="#">Cajas <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="../Controladores/ControladorListadoCajas.php">Listado de Cajas</a></li>
-                            <li><a href="../Controladores/ControladorAltaCajaEstanterias.php">Insertar Caja</a></li>
-                            <li><a href="VistaVentaCaja.php">Vender Caja</a></li>
-                            <li><a href="VistaDevolucionCaja.php">Devolver Caja</a></li>
-                        </ul>
-                    </li>
-                     <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" 
-                                            href="#">Estanterias <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="../Controladores/ControladorListadoEstanterias.php">Listado de Estanterias</a></li>
-                            <li><a href="VistaAltaEstanteria.php">Insertar Estanteria</a></li>
-                        </ul>
-                    </li>
-                    -->
+
                     <li><a href="../ControladorVoto">Votar</a></li>
-                    <li><a href="">Ver Resultados</a></li>
+                    <li><a href="../ControladorResultados">Ver Resultados</a></li>
                     <li><a href="VistaModificacionUsuario.jsp">Modificar Datos</a></li>
                     <li><a href="VistaDarDeBajaUsuario.jsp">Darse de Baja</a></li>
+                    <li><a href="../ControladorCerrarSesion">Cerrar Sesion</a></li>
                 </ul>
             </div>
         </nav>
@@ -53,13 +41,13 @@
             <div class="panel-group">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
-                        <h4><% out.print("Borja Mateo"); %></h4>
+                        <h4><% out.print(usuario.getNombre() + " " + usuario.getApellidos()); %></h4>
                     </div>
                     <div class="panel-body">
-                        <p><b>DNI: </b><% out.print("48258022-C"); %></p>
-                        <p><b>Domicilio: </b><% out.print("c/ la piruleta"); %></p>
-                        <p><b>Email: </b><% out.print("b@b.com"); %></p>
-                        <p><b>Fecha Nacimiento: </b><% out.print("01-01-1995"); %></p>
+                        <p><b>DNI: </b><% out.print(usuario.getDni()); %></p>
+                        <p><b>Domicilio: </b><% out.print(usuario.getDomicilio()); %></p>
+                        <p><b>Email: </b><% out.print(usuario.getEmail()); %></p>
+                        <p><b>Fecha Nacimiento: </b><% out.print(usuario.getFechaNacimiento()); %></p>
                     </div>
                 </div>
             </div>

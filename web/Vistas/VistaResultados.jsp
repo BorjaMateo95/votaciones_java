@@ -30,11 +30,20 @@
     <center>
         
         <h2>Resultados</h2>
+        
         </br>
         
-        <!--<a href="menu.php">
-            <button type="button" class="btn btn-primary">Volver al inicio</button>
-        </a>-->
+        <% if (session.getAttribute("rol").toString().equals("V")) {%>
+            <a href="MenuVotante.jsp">
+                <button type="button" class="btn btn-primary">Volver al inicio</button>
+            </a>
+        <%} else {%>
+            <a href="MenuAdministrador.jsp">
+                <button type="button" class="btn btn-primary">Volver al inicio</button>
+            </a>
+        <%}%>
+        
+        </br>
                 
         <div class="table-responsive" style="width:80%;">
             <table class="table table-striped table-hover">

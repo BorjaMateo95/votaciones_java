@@ -7,12 +7,10 @@ package Controladores;
 
 import DAO.ConexionBD;
 import DAO.DAOOperaciones;
-import Modelos.Usuario;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -26,10 +24,10 @@ import javax.servlet.http.HttpSession;
  *
  * @author BORJA
  */
-@WebServlet(name = "ControladorModificacion", urlPatterns = {"/ControladorModificacion"})
-public class ControladorModificacion extends HttpServlet {
+@WebServlet(name = "ControladorEscanos", urlPatterns = {"/ControladorEscanos"})
+public class ControladorEscanos extends HttpServlet {
     
-    private Connection conn;
+        private Connection conn;
 
     @Override
     public void init() throws ServletException {
@@ -43,9 +41,8 @@ public class ControladorModificacion extends HttpServlet {
         } catch (SQLException ex) {
             Logger.getLogger(ControladorRegistro.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
     }
+        
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -56,35 +53,25 @@ public class ControladorModificacion extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         
         DAOOperaciones dao = new DAOOperaciones();
         HttpSession httpSession = request.getSession();
         
-        Usuario usuRegistrado = (Usuario) httpSession.getAttribute("usuario");
-        
-                
-        Usuario usuario = new Usuario(usuRegistrado.getDni(), request.getParameter("nombre"),
-                request.getParameter("apellidos"), request.getParameter("domicilio"),
-                request.getParameter("email"), request.getParameter("password1"), 
-                LocalDate.parse(request.getParameter("fechaNac")));
-        
         try {
-           dao.modificacionUsuario(conn, usuario, request.getParameter("password2"));
-           httpSession.setAttribute("msg", "Datos actualizados correctamente.");
-           httpSession.setAttribute("rol", usuRegistrado.getRol());
-           response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaMensajes.jsp");
+            dao.presentarResultados(conn);
+            
         } catch (SQLException ex) {
             httpSession.setAttribute("msg", ex.getMessage());
-            httpSession.setAttribute("rol", usuRegistrado.getRol());
+            httpSession.setAttribute("rol", "A");
             response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaError.jsp");
         } catch (Exception ex) {
             httpSession.setAttribute("msg", ex.getMessage());
-            httpSession.setAttribute("rol", usuRegistrado.getRol());
+            httpSession.setAttribute("rol", "A");
             response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaError.jsp");
         }
-   
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
