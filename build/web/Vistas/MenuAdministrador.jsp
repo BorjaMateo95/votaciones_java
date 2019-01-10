@@ -40,7 +40,15 @@
                         
                     </li>
                     
-                    <li><a href="../ControladorEscanos">Presentar resultados</a></li>
+                    <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" 
+                                            href="#">Resultados<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../ControladorEscanos">Presentar Resultados</a></li>
+                            <li><a href="../ControladorResultadosVotantes">Ver Resultados</a></li>
+                        </ul>
+                        
+                    </li>
+                    
                     <li><a href="VistaModificacionUsuario.jsp">Modificar Datos</a></li>
                     <li><a href="VistaDarDeBajaUsuario.jsp">Darse de Baja</a></li>
                     <li><a href="../ControladorCerrarSesion">Cerrar Sesion</a></li>

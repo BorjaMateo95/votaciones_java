@@ -377,6 +377,37 @@ public class DAOOperaciones {
  
     }
     
+    public ArrayList<Escano> dameEscanos(Connection conn) throws SQLException, MiException {
+        PreparedStatement stc = conn.prepareStatement("SELECT idPartido, count(*) as 'n_escanos' "
+                + "FROM escanos GROUP BY idPartido;");
+        ResultSet rsu = stc.executeQuery();
+        
+        ArrayList<Escano> listEscano = new ArrayList<Escano>();
+        int cont = 0;
+        
+        while (rsu.next()){
+            listEscano.add(new Escano(dameUnPartido(conn, rsu.getInt("idPartido")), 
+                    dameCandidatos(conn, rsu.getInt("idPartido"), rsu.getInt("n_escanos"))));
+            cont++;
+        }
+        
+        if(cont == 0) {
+            throw new MiException("ERROR el administrador no ha presentado los resultados");
+        }
+
+        return listEscano;
+    }
+    
+    
+    private Partido dameUnPartido(Connection conn, int idPartido) throws SQLException {
+        PreparedStatement stpar = conn.prepareStatement("SELECT * FROM partidos WHERE ID=?");
+        stpar.setInt(1, idPartido);
+        ResultSet rspar = stpar.executeQuery();
+        rspar.next();
+        return new Partido(rspar.getInt("id"), rspar.getString("NOMBRE"), 
+                rspar.getString("LOGO"), rspar.getInt("VOTOS"));
+    }
+    
     
     private void guardaEscano(Connection conn, int idPartido, int idCandidato) throws SQLException {
         String sql = "INSERT INTO escanos (idPartido, idCandidato) VALUES(?,?)";
@@ -387,10 +418,10 @@ public class DAOOperaciones {
     }
     
     
-    private ArrayList<Candidato> dameCandidatos(Connection conn, int id, int tope) throws SQLException, MiException {
+    private ArrayList<Candidato> dameCandidatos(Connection conn, int id, int nEscanos) throws SQLException, MiException {
         PreparedStatement stpar = conn.prepareStatement("SELECT * FROM candidatos WHERE ID_PARTIDO=? ORDER BY ORDEN LIMIT ?");
         stpar.setInt(1, id);
-        stpar.setInt(2, tope);
+        stpar.setInt(2, nEscanos);
         ResultSet rspar = stpar.executeQuery();
         int contador = 0;
                 
@@ -402,7 +433,7 @@ public class DAOOperaciones {
         }
         
         if(contador == 0) {
-            throw new MiException("ERROR no hay partidos en la BD");
+            throw new MiException("ERROR no hay candidatos en la BD");
         }
 
         return listaCandidatos;
@@ -422,5 +453,7 @@ public class DAOOperaciones {
         }
         
     }
+
+
     
 }

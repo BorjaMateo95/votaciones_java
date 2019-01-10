@@ -1,4 +1,5 @@
 
+<%@page import="Modelos.Escano"%>
 <%@page import="Modelos.Partido"%>
 <%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -25,11 +26,12 @@
     <body>
         <%
             ArrayList<Partido> listadoPartidos = (ArrayList<Partido>) session.getAttribute("partidos");
+            ArrayList<Escano> listadoEscanos = (ArrayList<Escano>) session.getAttribute("listadoEscanos");
             %>
         
     <center>
         
-        <h2>Resultados</h2>
+        <h2>Escaños y Resultados</h2>
         
         </br>
         
@@ -44,8 +46,8 @@
         <%}%>
         
         </br>
-                
-        <div class="table-responsive" style="width:80%;">
+                       
+        <div class="table-responsive" style="width:60%;">
             <table class="table table-striped table-hover">
                 <tr style="background-color:#343a40">
                     <th style="color:#F7F9F9"><b>Nombre</b></th>
@@ -66,8 +68,40 @@
                 %>
             </table>
         </div>
+            
+        </br>
+        
+        <table class="table table-striped table-hover" style="text-align:center; width: 60%;">
+                                
+               <%
+                    for(int i = 0; i < listadoEscanos.size(); i++ ){
+                %>
+                <tr style="background-color:#343a40">
+                    <th colspan="2" style="color:#F7F9F9"><b>Nombre</b></th>
+                    <th colspan="2" style="color:#F7F9F9"><b>Votos</b></th>
+		</tr>
+                    <tr>
+                        <td colspan="2"><% out.print(listadoEscanos.get(i).getPartido().getNombre()); %></td>
+                        <td colspan="2"><% out.print(listadoEscanos.get(i).getPartido().getVotos()); %></td>                                             
+                    </tr>
+                    
+                    <tr style="background-color:#566573">
+                        <th colspan="2" style="color:#F7F9F9"><b>Nombre</b></th>
+                        <th colspan="2" style="color:#F7F9F9"><b>Orden</b></th>
+                    </tr>
+                    
+                <%
+                    for(int e = 0; e < listadoEscanos.get(i).getListCandidatos().size(); e++ ){
+                %>
+                        <tr>
+                            <td colspan="2"><% out.print(listadoEscanos.get(i).getListCandidatos().get(e).getNombre()); %></td>
+                            <td colspan="2"><% out.print(listadoEscanos.get(i).getListCandidatos().get(e).getOrden()); %></td>
+                        </tr>
+                       <%}%>
+
+                <%}%>
+            
+            </table>
         </center>
     </body>
 </html>
-
-

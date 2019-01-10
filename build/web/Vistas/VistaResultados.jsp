@@ -49,7 +49,6 @@
             <table class="table table-striped table-hover">
                 <tr style="background-color:#343a40">
                     <th style="color:#F7F9F9"><b>Nombre</b></th>
-                    <th style="color:#F7F9F9"><b>Logo</b></th>
                     <th style="color:#F7F9F9"><b>Votos</b></th>
 		</tr>
 
@@ -58,7 +57,6 @@
                         %>
                             <tr>
                                <td><%out.print(listadoPartidos.get(i).getNombre());%></td>
-                               <td><%out.print(listadoPartidos.get(i).getLogo());%></td>
                                <td><%out.print(listadoPartidos.get(i).getVotos());%></td>                                         
                             </tr>
                             

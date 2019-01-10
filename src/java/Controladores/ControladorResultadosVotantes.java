@@ -7,6 +7,7 @@ package Controladores;
 
 import DAO.ConexionBD;
 import DAO.DAOOperaciones;
+import Modelos.Usuario;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -24,10 +25,10 @@ import javax.servlet.http.HttpSession;
  *
  * @author BORJA
  */
-@WebServlet(name = "ControladorEscanos", urlPatterns = {"/ControladorEscanos"})
-public class ControladorEscanos extends HttpServlet {
+@WebServlet(name = "ControladorResultadosVotantes", urlPatterns = {"/ControladorResultadosVotantes"})
+public class ControladorResultadosVotantes extends HttpServlet {
     
-        private Connection conn;
+            private Connection conn;
 
     @Override
     public void init() throws ServletException {
@@ -42,7 +43,6 @@ public class ControladorEscanos extends HttpServlet {
             Logger.getLogger(ControladorRegistro.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-        
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -57,21 +57,27 @@ public class ControladorEscanos extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         
-        DAOOperaciones dao = new DAOOperaciones();
+         DAOOperaciones dao = new DAOOperaciones();
         HttpSession httpSession = request.getSession();
+        Usuario usu = (Usuario) httpSession.getAttribute("usuario");
         
         try {
-            httpSession.setAttribute("listadoEscanos", dao.presentarResultados(conn));
-            response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaEscanos.jsp");
+            httpSession.setAttribute("listadoEscanos", dao.dameEscanos(conn));
+            httpSession.setAttribute("partidos", dao.comprobarEscrutinio(conn));
+            httpSession.setAttribute("rol", usu.getRol());
+            response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaResultadosVotantes.jsp");
         } catch (SQLException ex) {
             httpSession.setAttribute("msg", ex.getMessage());
-            httpSession.setAttribute("rol", "A");
+            httpSession.setAttribute("rol", usu.getRol());
             response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaError.jsp");
         } catch (Exception ex) {
             httpSession.setAttribute("msg", ex.getMessage());
-            httpSession.setAttribute("rol", "A");
+            httpSession.setAttribute("rol", usu.getRol());
             response.sendRedirect("/Proyecto_Votaciones_Borja/Vistas/VistaError.jsp");
         }
+
+        
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

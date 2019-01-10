@@ -29,7 +29,7 @@
                 <ul class="nav navbar-nav">
 
                     <li><a href="../ControladorVoto">Votar</a></li>
-                    <li><a href="../ControladorResultados">Ver Resultados</a></li>
+                    <li><a href="../ControladorResultadosVotantes">Ver Resultados</a></li>
                     <li><a href="VistaModificacionUsuario.jsp">Modificar Datos</a></li>
                     <li><a href="VistaDarDeBajaUsuario.jsp">Darse de Baja</a></li>
                     <li><a href="../ControladorCerrarSesion">Cerrar Sesion</a></li>
